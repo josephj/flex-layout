@@ -1,22 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Flex, Box, Text } from "rebass";
+import { Card, Flex, Box, Text } from "rebass";
 import MediaQuery from "react-responsive";
-import { ThemeProvider } from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import theme from "./theme";
-import { watchViewport, unwatchViewport, getViewportState } from "tornis";
+import { watchViewport, unwatchViewport } from "tornis";
+import CurrentWidth from './CurrentWidth';
+
+const DesignCanvas = () => (
+  <Box bg="gray" flex={2} p={2}>
+    <CurrentWidth>
+      {(currentWidth, currentHeight) => (
+        <>
+          <span>{currentWidth}</span>
+          <span>x</span>
+          <span>{currentHeight}</span>
+        </>
+      )}
+    </CurrentWidth>
+  </Box>
+)
 
 function App() {
   const [viewportSize, setViewportSize] = useState({ x: 0, y: 0 });
   const handleViewportUpdate = state => {
-    console.log("handleViewportUpdate", state);
     setViewportSize(state.size);
   };
-
   useEffect(() => {
-    // const state = getViewportState();
-    // console.log("useEffect", state.size);
-    // setViewportSize(state.size);
-
     watchViewport(handleViewportUpdate);
     return () => {
       unwatchViewport(handleViewportUpdate);
@@ -31,34 +40,57 @@ function App() {
             Header
           </Flex>
           <Flex flex={2} flexDirection={["column-reverse", "row"]}>
-            <Box
-              bg="orange"
-              p={2}
-              width={[1, 350]}
-              style={{ whiteSpace: "nowrap", overflow: "auto" }}
-            >
-              <img
-                src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
-                width="174"
-                alt="parrot"
-                style={{ marginRight: "1px" }}
-              />
-              <img
-                src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
-                width="174"
-                alt="parrot"
-                style={{ marginRight: "1px" }}
-              />
-              <img
-                src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
-                width="174"
-                alt="parrot"
-                style={{ marginRight: "1px" }}
-              />
-            </Box>
-            <Box bg="gray" flex={2} p={2}>
-              Design Canvas
-            </Box>
+            <Flex flexDirection={["column", "row-reverse"]} width={[1, 320]}>
+              <Box
+                bg="orange"
+                p={2}
+                width={[1, 200]}
+                style={{ whiteSpace: "nowrap", overflow: "auto" }}
+              >
+                <PhotoCard>
+                  <img
+                    src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
+                    width="174"
+                    alt="parrot"
+                  />
+                </PhotoCard>
+                <PhotoCard>
+                  <img
+                    src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
+                    width="174"
+                    alt="parrot"
+                  />
+                </PhotoCard>
+                <PhotoCard>
+                  <img
+                    src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
+                    width="174"
+                    alt="parrot"
+                  />
+                </PhotoCard>
+                <PhotoCard style={{display: 'inline-block'}} mr={1} width={['auto', 1]}>
+                  <img
+                    src="https://c1.staticflickr.com/9/8387/8638813125_3cac0dc01c_n.jpg"
+                    width="174"
+                    alt="parrot"
+                  />
+                </PhotoCard>
+              </Box>
+              <Flex
+                bg="pink"
+                p={2}
+                width={[1, 120]}
+                style={{ whiteSpace: "nowrap", overflow: "auto" }}
+                flexDirection={["row", "column"]}
+                justifyContent="flex-start"
+              >
+                <Card width={[1/4, 1]} alignItems="center" bg="red" borderRadius={3} mr={1} mb={[0, 1]} p={2} style={{height: '50px', textAlign: "center" }}>Photos</Card>
+                <Card width={[1/4, 1]} bg="red" borderRadius={3} mr={1} mb={[0, 1]} p={2} style={{height: '50px', textAlign: "center"}}>Backgrounds</Card>
+                <Card width={[1/4, 1]} bg="red" borderRadius={3} mr={1} mb={[0, 1]} p={2} style={{height: '50px', textAlign: "center"}}>Layouts</Card>
+                <Card width={[1/4, 1]} bg="red" borderRadius={3} p={2} style={{height: '50px', textAlign: "center"}}>Text</Card>
+              </Flex>
+            </Flex>
+              <DesignCanvas bg="gray" flex={2} p={2}/>
             <MediaQuery query={`(min-width: ${theme.breakpoints[0]})`}>
               <Box bg="purple" p={2} width={40}>
                 Toolbar
@@ -94,5 +126,23 @@ function App() {
     </ThemeProvider>
   );
 }
+
+const PhotoCard = styled(Card).attrs({
+  mr: [1, 0],
+  mb: [0, 1],
+  width: ['auto', 1]
+})`
+  ${props => `
+    img {
+      width: 100%;
+    }
+    @media (max-width: ${props.theme.breakpoints[0]}) {
+      display: inline-block;
+      img {
+        width: 174px;
+      }
+    }
+  `}
+`;
 
 export default App;
