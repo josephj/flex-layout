@@ -1,34 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import { Box } from "rebass";
 import CurrentWidth from "./CurrentWidth";
-import { Droppable } from "@shopify/draggable";
 
 export default function DesignCanvas() {
-  const wrapperRef = useRef();
+  const droppableRef = useRef();
   useEffect(() => {
-    const dropzoneEl = wrapperRef.current;
-    console.log(dropzoneEl);
-    const droppable = new Droppable(dropzoneEl, {
-      draggable: ".draggable-source",
-      dropzone: ".dropzone"
+    const droppableEl = droppableRef.current;
+    droppableEl.addEventListener("dragenter", () => {
+      droppableEl.style.backgroundColor = "mango";
     });
-    droppable.on("droppable:dropped", () => {
-      console.log("droppable:dropped");
-      dropzoneEl.style.backgroundColor = "mango";
-      alert("hihi");
+    droppableEl.addEventListener("dragleave", () => {
+      droppableEl.style.backgroundColor = "orange";
     });
-    droppable.on("droppable:returned", () => {
-      console.log("droppable:returned");
-      alert("hihi");
-      dropzoneEl.style.backgroundColor = "orange";
-    });
-    return () => {
-      droppable.off();
-    };
   }, []);
 
   return (
-    <Box bg="gray" flex={2} p={2} ref={wrapperRef}>
+    <Box bg="gray" flex={2} p={2}>
       <CurrentWidth>
         {(currentWidth, currentHeight) => (
           <>
@@ -39,10 +26,10 @@ export default function DesignCanvas() {
         )}
       </CurrentWidth>
       <Box
-        dropzone
-        className="dropzone"
+        ref={droppableRef}
         bg="orange"
         width={1}
+        p={5}
         style={{ height: "50%" }}
       >
         DropZone

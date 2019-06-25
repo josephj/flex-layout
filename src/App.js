@@ -1,19 +1,20 @@
-import { Draggable } from "@shopify/draggable";
+import isTouchSupported from "is-touch-device";
 import { times } from "lodash";
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import MediaQuery from "react-responsive";
 import { Box } from "rebass";
 import { ThemeProvider } from "styled-components";
-import { polyfill } from "mobile-drag-drop";
-import { scrollBehaviourDragImageTranslateOverride } from "mobile-drag-drop/scroll-behaviour";
-
+import { DragDropContext } from "react-dnd";
+import HTML5Backend from "react-dnd-html5-backend";
+import TouchBackend from "react-dnd-touch-backend";
 import theme from "./theme";
 import { ReactComponent as Logo } from "./logo.svg";
 import SizeDetector from "./SizeDetector";
 import DesignCanvas from "./DesignCanvas";
+import Draggable from "./Draggable";
+import useDisableScaling from "./useDisableScaling";
 import {
   Grid,
-  Cell,
   Header,
   Body,
   Nav,
@@ -22,26 +23,9 @@ import {
   NavItem,
   SampleImage
 } from "./Styles";
-import useDisableScaling from "./useDisableScaling";
-
-import "mobile-drag-drop/default.css";
-polyfill({
-  dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride
-});
 
 function App() {
   useDisableScaling();
-
-  const dragContainerRef = useRef();
-  useEffect(() => {
-    let draggable = new Draggable(dragContainerRef.current, {
-      delay: 300
-    });
-    return () => {
-      draggable.destroy();
-      draggable = null;
-    };
-  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -50,16 +34,18 @@ function App() {
           <Header>Header</Header>
           <Body>
             <Nav>
-              <NavSub ref={dragContainerRef}>
-                <Cell bg="yellow" />
-                <Cell bg="pink">
-                  <Logo />
-                </Cell>
-                {times(10, i => (
-                  <Cell key={i}>
-                    <SampleImage />
-                  </Cell>
-                ))}
+              <NavSub>
+                <Box width={1} style={{ overflow: "auto" }}>
+                  <Draggable bg="yellow" />
+                  <Draggable bg="pink">
+                    <Logo />
+                  </Draggable>
+                  {times(10, i => (
+                    <Draggable key={i}>
+                      <SampleImage />
+                    </Draggable>
+                  ))}
+                </Box>
               </NavSub>
               <NavMain>
                 <NavItem>Photos</NavItem>
@@ -82,4 +68,8 @@ function App() {
   );
 }
 
-export default App;
+const HOC = isTouchSupported()
+  ? DragDropContext(TouchBackend({ delayTouchStart: 300 }))
+  : DragDropContext(HTML5Backend);
+
+export default HOC(App);

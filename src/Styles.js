@@ -33,7 +33,7 @@ export const NavMain = styled(Flex).attrs({
   justifyContent: "flex-start"
 })`
   white-space: nowrap;
-  overflow: auto;
+  overflow: visible;
 `;
 
 export const NavSub = styled(Box).attrs({
@@ -45,8 +45,7 @@ export const NavSub = styled(Box).attrs({
 })`
   white-space: nowrap;
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: auto;
 `;
 
 export const NavItem = styled(Card).attrs({
@@ -68,7 +67,6 @@ export const Cell = styled(Card).attrs({
   mr: [1, 0],
   mb: [0, 1],
   width: ["auto", 1],
-  className: "draggable-source",
   title: ""
 })`
   min-width: 100px;
@@ -78,13 +76,6 @@ export const Cell = styled(Card).attrs({
   vertical-align: middle;
   border: 2px solid transparent;
   user-select: none;
-  &.draggable-source--is-dragging {
-    border-color: green;
-  }
-  &.draggable-mirror {
-    opacity: 0.5;
-  }
-
   ${props => `
       img {
         width: 100%;

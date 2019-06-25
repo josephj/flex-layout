@@ -1,4 +1,6 @@
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   color: #fff;
@@ -17,4 +19,60 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+.source,
+.target {
+  padding: 1px;
+  text-align: center;
+  z-index: 1;
+}
+.source,
+.source-preview {
+  background: #c7c7c7;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  z-index: 1;
+}
+.source-preview {
+  background: #888888;
+  display: flex;
+  align-items: center;
+  opacity: 0.5;
+  position: absolute;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  opacity: 1;
+  transition: none;
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  justify-content: center;
+}
+.target {
+  background: #eeeeee;
+  width: 300px;
+  height: 300px;
+}
+.nested {
+  display: flex;
+  background: #ffbbbb;
+  opacity: 0.7;
+  width: 500px;
+  max-width: 40%;
+  max-height: 50%;
+}
+.nested > .nested {
+  background: #bbffbb;
+}
+.nested > .nested > .nested {
+  background: #bbbbff;
+}
+.hovered {
+  opacity: 1 !important;
+}
+.nested-child {
+  padding: 10px;
+  margin: 50px 10px;
+  background-color: #ffffff;
 }
