@@ -1,12 +1,12 @@
-import isTouchSupported from "is-touch-device";
 import { times } from "lodash";
 import React from "react";
 import MediaQuery from "react-responsive";
 import { Box } from "rebass";
 import { ThemeProvider } from "styled-components";
-import { DragDropContext } from "react-dnd";
-import HTML5Backend from "react-dnd-html5-backend";
-import TouchBackend from "react-dnd-touch-backend";
+import { polyfill } from "mobile-drag-drop";
+import { scrollBehaviourDragImageTranslateOverride } from "mobile-drag-drop/scroll-behaviour";
+import "mobile-drag-drop/default.css";
+
 import theme from "./theme";
 import { ReactComponent as Logo } from "./logo.svg";
 import SizeDetector from "./SizeDetector";
@@ -23,6 +23,11 @@ import {
   NavItem,
   SampleImage
 } from "./Styles";
+
+polyfill({
+  holdToDrag: 200,
+  dragImageTranslateOverride: scrollBehaviourDragImageTranslateOverride
+});
 
 function App() {
   useDisableScaling();
@@ -68,8 +73,4 @@ function App() {
   );
 }
 
-const HOC = isTouchSupported()
-  ? DragDropContext(TouchBackend({ delayTouchStart: 300 }))
-  : DragDropContext(HTML5Backend);
-
-export default HOC(App);
+export default App;

@@ -1,15 +1,15 @@
 import isTouchSupported from "is-touch-device";
 import React from "react";
-import { DragSource } from "react-dnd";
 
 import { Cell } from "./Styles";
 import DragPreview from "./DragPreview";
 
 const Draggable = props => {
-  const { children, isDragging, connectDragSource, ...otherProps } = props;
+  const { children, isDragging, ...otherProps } = props;
 
-  return connectDragSource(
+  return (
     <div
+      draggable
       className="source"
       style={{
         width: "178px",
@@ -27,18 +27,4 @@ const Draggable = props => {
   );
 };
 
-const dragSource = {
-  beginDrag(props) {
-    return props;
-  }
-};
-
-function collect(connect, monitor) {
-  return {
-    connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
-    isDragging: monitor.isDragging()
-  };
-}
-
-export default DragSource("draggable-item", dragSource, collect)(Draggable);
+export default Draggable;
